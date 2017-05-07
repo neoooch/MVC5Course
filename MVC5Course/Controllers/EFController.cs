@@ -1,6 +1,7 @@
 ﻿using MVC5Course.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -16,7 +17,7 @@ namespace MVC5Course.Controllers
             //取得全部資料
             var all = db.Product.AsQueryable();
 
-            var data = all.Where(p => p.Active == true && p.ProductName.Contains("Black"))
+            var data = all.Where(p => p.IsDeleted == false && p.Active == true && p.ProductName.Contains("Black"))
                 .OrderByDescending(p => p.ProductId);
 
             return View(data);
@@ -46,7 +47,7 @@ namespace MVC5Course.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(int id,Product data)
+        public ActionResult Edit(int id, Product data)
         {
             if (ModelState.IsValid)
             {
@@ -71,12 +72,27 @@ namespace MVC5Course.Controllers
                     db.OrderLine.Remove(Order);
                 }*/
                 //等於上面的foreach
-                db.OrderLine.RemoveRange(item.OrderLine);
-                db.Product.Remove(item);
-                db.SaveChanges();
+                //db.OrderLine.RemoveRange(item.OrderLine);
+                //db.Product.Remove(item);
+                try
+                {
+                    item.IsDeleted = true;
+                    db.SaveChanges();
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    throw ex;
+                }
+
                 return RedirectToAction("Index");
             }
             return View();
+        }
+
+        public ActionResult Details(int id)
+        {
+            var data = db.Database.SqlQuery<Product>("SELECT * FROM Product WHERE ProductId=@p0", id).FirstOrDefault();
+            return View(data);
         }
     }
 }
