@@ -130,15 +130,33 @@ namespace MVC5Course.Controllers
         public ActionResult ProductList()
         {
             var data = db.Product
-                .Where(p => p.Active == true)
                 .Select(p => new ProductListVM()
                 {
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
                     Price = p.Price,
                     Stock = p.Stock
-                }).Take(10);
+                }).OrderByDescending(p => p.ProductId).Take(10);
             return View(data);
+        }
+
+        public ActionResult CreateProduct()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult CreateProduct(
+            [Bind(Include = "ProductName,Price,Stock")]
+        ProductListVM data)
+        {
+            if (ModelState.IsValid)
+            {
+                //儲存資料進資料庫
+                return RedirectToAction("ProductList");
+            }
+            //驗證失敗，繼續顯示原本的表單
+            return View();
         }
     }
 }

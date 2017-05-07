@@ -8,6 +8,12 @@ namespace MVC5Course.Models
     [MetadataType(typeof(ProductMetaData))]
     public partial class Product
     {
+        public int OrderCnt
+        {
+            get {
+                return this.OrderLine.Count;
+            }
+        }        
     }
     
     public partial class ProductMetaData

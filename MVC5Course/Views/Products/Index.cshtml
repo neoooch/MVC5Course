@@ -32,10 +32,11 @@
             @Html.DisplayFor(modelItem => item.ProductName)
         </td>
         <td>
-            @String.Format("{0:0.0}", item.Price)
+            @String.Format("{0:0}", item.Price)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Active)
+            @*@Html.DisplayFor(modelItem => item.Active)*@
+            @Html.DisplayTextFor(modelItem => item.Active)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Stock)
