@@ -50,5 +50,11 @@ namespace MVC5Course.Controllers
                 return View("About");
             }
         }
+
+        //跳轉至建立成功頁面
+        public ActionResult SuccessRedirect()
+        {
+            return PartialView("SuccessRedirect","/");
+        }
     }
 }
