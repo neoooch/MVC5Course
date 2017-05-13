@@ -51,10 +51,25 @@ namespace MVC5Course.Controllers
             }
         }
 
-        //跳轉至建立成功頁面
+        //跳轉至 顯示 成功 訊息 的頁面
         public ActionResult SuccessRedirect()
         {
-            return PartialView("SuccessRedirect","/");
+            return PartialView("SuccessRedirect", "/");
+        }
+
+        public ActionResult GetImgFile()
+        {
+            //顯示檔案
+            //return File(Server.MapPath("~/Content/E龍.png"), "image/png");
+            //強迫下載
+            return File(Server.MapPath("~/Content/E龍.png"), "image/png", "EDragon.png");
+        }
+
+        public ActionResult GetJson()
+        {
+            //關閉延遲載入
+            db.Configuration.LazyLoadingEnabled = false;
+            return Json(db.Product.Take(5),JsonRequestBehavior.AllowGet);
         }
     }
 }
