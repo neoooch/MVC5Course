@@ -123,9 +123,14 @@ namespace MVC5Course.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult ProductList()
+        public ActionResult ProductList(string qStr)
         {
-            var data = repo.FindByAll(true,ShowAll:false,ShowCnt:10)
+            var data = repo.FindByAll(true, ShowAll: false, ShowCnt: 10);
+            if (!string.IsNullOrEmpty(qStr))
+            {
+                data = data.Where(p => p.ProductName.Contains(qStr));
+            }
+            ViewData.Model = data
                 .Select(p => new ProductListVM()
                 {
                     ProductId = p.ProductId,
@@ -133,7 +138,7 @@ namespace MVC5Course.Controllers
                     Price = p.Price,
                     Stock = p.Stock
                 }).OrderByDescending(p => p.ProductId);
-            return View(data);
+            return View();
         }
 
         public ActionResult CreateProduct()
@@ -149,6 +154,7 @@ namespace MVC5Course.Controllers
             if (ModelState.IsValid)
             {
                 //儲存資料進資料庫
+                TempData["SuccessResult"] = "新增商品成功";
                 return RedirectToAction("ProductList");
             }
             //驗證失敗，繼續顯示原本的表單

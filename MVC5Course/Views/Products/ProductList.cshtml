@@ -8,7 +8,19 @@
 
 <p>
     @Html.ActionLink("Create New", "CreateProduct")
+
+    
 </p>
+<form method="get">
+    查詢:
+    @Html.TextBox("qStr")
+    <button>查詢</button>
+
+</form>
+@if(TempData["SuccessResult"] != null)
+{
+    <h1>@TempData["SuccessResult"]</h1>
+}
 <table class="table">
     <tr>
         <th>
