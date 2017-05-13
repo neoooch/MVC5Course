@@ -7,14 +7,31 @@ namespace MVC5Course.Models
     using ValidationAttribute;
 
     [MetadataType(typeof(ProductMetaData))]
-    public partial class Product
+    public partial class Product : IValidatableObject
     {
         public int OrderCnt{
             get
             {
-                return this.OrderLine.Count;
+                //return this.OrderLine.Count;
+                using (var db = new FabricsEntities())
+                {
+                    return db.Product.Find(this.ProductId).OrderLine.Count;
+                }
             }
-        }        
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if(this.Price > 200 && this.Stock < 5)
+            {
+                yield return new ValidationResult("價錢與庫存不合理", new string[] { "Price", "Stock" });
+            }
+            if(this.OrderCnt > 5 && this.Stock == 0)
+            {
+                yield return new ValidationResult("訂單數量與庫存不合",new string[] { "Stock" });
+            }
+            yield break;
+        }
     }
     
     public partial class ProductMetaData
