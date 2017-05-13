@@ -12,14 +12,26 @@ namespace MVC5Course.Models
             return base.All().Where(p => !p.IsDeleted);
         }
 
+        public IQueryable<Product> All(bool ShowAll)
+        {
+            if (ShowAll)
+            {
+                return base.All();
+            }else
+            {
+                return this.All();
+            }
+        }
+
         public Product FindByProductId(int id)
         {
             return this.All().FirstOrDefault(p => p.ProductId == id);
         }
 
-        public IQueryable<Product> FindByAll(bool Active,int ShowCnt = 0)
+        public IQueryable<Product> FindByAll(bool Active,bool ShowAll = false ,int ShowCnt = 0)
         {
-            var data = this.All()
+            var all = All(ShowAll);
+            var data = all
                 .Where(p => p.Active.HasValue && p.Active.Value == Active)
                 .OrderByDescending(p => p.ProductId);
 

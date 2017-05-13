@@ -18,7 +18,7 @@ namespace MVC5Course.Controllers
         // GET: Products
         public ActionResult Index(bool Active = true)
         {
-            var data = repo.FindByAll(Active,ShowCnt: 10);
+            var data = repo.FindByAll(Active,ShowAll:false,ShowCnt: 10);
             return View(data);
         }
 
