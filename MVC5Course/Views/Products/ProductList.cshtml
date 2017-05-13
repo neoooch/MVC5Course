@@ -12,8 +12,10 @@
     
 </p>
 <form method="get">
-    查詢:
+    商品名稱:
     @Html.TextBox("qStr")
+    庫存數量:
+    @Html.TextBox("MinStock") ~ @Html.TextBox("MaxStock")
     <button>查詢</button>
 
 </form>

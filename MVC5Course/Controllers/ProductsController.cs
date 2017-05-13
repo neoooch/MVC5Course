@@ -123,13 +123,20 @@ namespace MVC5Course.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult ProductList(string qStr)
+        //依照Model的範圍數量給預設值
+        public ActionResult ProductList(string qStr,int MinStock=0,int MaxStock=999)
         {
+            //查詢所有資料
             var data = repo.FindByAll(true, ShowAll: false, ShowCnt: 10);
+
+            //判斷是否有搜尋條件
             if (!string.IsNullOrEmpty(qStr))
             {
                 data = data.Where(p => p.ProductName.Contains(qStr));
             }
+            data = data.Where(p => p.Stock >= MinStock && p.Stock <= MaxStock);
+
+            //選擇顯示欄位並用ProductId倒序
             ViewData.Model = data
                 .Select(p => new ProductListVM()
                 {
