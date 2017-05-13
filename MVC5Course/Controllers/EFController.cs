@@ -8,10 +8,10 @@ using System.Web.Mvc;
 
 namespace MVC5Course.Controllers
 {
-    public class EFController : Controller
+    public class EFController : BaseController
     {
         // GET: EF
-        FabricsEntities db = new FabricsEntities();
+        //FabricsEntities db = new FabricsEntities();
         public ActionResult Index()
         {
             //取得全部資料

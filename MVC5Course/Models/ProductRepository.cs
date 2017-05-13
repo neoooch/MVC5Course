@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Data.Entity;
 
 namespace MVC5Course.Models
-{   
-	public  class ProductRepository : EFRepository<Product>, IProductRepository
-	{
+{
+    public class ProductRepository : EFRepository<Product>, IProductRepository
+    {
         public override IQueryable<Product> All()
         {
             return base.All().Where(p => !p.IsDeleted);
@@ -17,7 +17,8 @@ namespace MVC5Course.Models
             if (ShowAll)
             {
                 return base.All();
-            }else
+            }
+            else
             {
                 return this.All();
             }
@@ -28,14 +29,14 @@ namespace MVC5Course.Models
             return this.All().FirstOrDefault(p => p.ProductId == id);
         }
 
-        public IQueryable<Product> FindByAll(bool Active,bool ShowAll = false ,int ShowCnt = 0)
+        public IQueryable<Product> FindByAll(bool Active, bool ShowAll = false, int ShowCnt = 0)
         {
             var all = All(ShowAll);
             var data = all
                 .Where(p => p.Active.HasValue && p.Active.Value == Active)
                 .OrderByDescending(p => p.ProductId);
 
-            if(ShowCnt > 0)
+            if (ShowCnt > 0)
             {
                 return data.Take(ShowCnt);
             }
@@ -46,10 +47,15 @@ namespace MVC5Course.Models
         {
             this.UnitOfWork.Context.Entry(UpdData).State = EntityState.Modified;
         }
-	}
 
-	public  interface IProductRepository : IRepository<Product>
-	{
+        public override void Delete(Product entity)
+        {
+            entity.IsDeleted = true;
+        }
+    }
 
-	}
+    public interface IProductRepository : IRepository<Product>
+    {
+
+    }
 }

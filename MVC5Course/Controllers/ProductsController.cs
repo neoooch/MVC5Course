@@ -11,7 +11,7 @@ using MVC5Course.Models.ViewModels;
 
 namespace MVC5Course.Controllers
 {
-    public class ProductsController : Controller
+    public class ProductsController : BaseController
     {
         //private FabricsEntities db = new FabricsEntities();
         ProductRepository repo = RepositoryHelper.GetProductRepository();
@@ -112,14 +112,20 @@ namespace MVC5Course.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Product product = repo.FindByProductId(id);
+            //關閉驗證
+            repo.UnitOfWork.Context.Configuration.ValidateOnSaveEnabled = false;
+
             repo.Delete(product);
+            //可共用UnitOfWork，因此只要commit一次就好，若要刪除OrderLine的資料的話
+            //var repoOrderLine = RepositoryHelper.GetOrderLineRepository(repo.UnitOfWork);
+
             repo.UnitOfWork.Commit();
             return RedirectToAction("Index");
         }
 
         public ActionResult ProductList()
         {
-            var data = repo.FindByAll(true,10)
+            var data = repo.FindByAll(true,ShowAll:false,ShowCnt:10)
                 .Select(p => new ProductListVM()
                 {
                     ProductId = p.ProductId,
