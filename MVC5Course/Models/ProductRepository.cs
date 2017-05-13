@@ -25,9 +25,14 @@ namespace MVC5Course.Models
 
             if(ShowCnt > 0)
             {
-                data.Take(ShowCnt);
+                return data.Take(ShowCnt);
             }
             return data;
+        }
+
+        public void Update(Product UpdData)
+        {
+            this.UnitOfWork.Context.Entry(UpdData).State = EntityState.Modified;
         }
 	}
 
