@@ -20,7 +20,7 @@ namespace MVC5Course.Controllers
         {
             //ViewBag.Message = "Your application description page.";
             //測試例外錯誤訊息
-            throw new ArgumentException("Error Handled!!");
+            //throw new ArgumentException("Error Handled!!");
 
             return View();
         }
