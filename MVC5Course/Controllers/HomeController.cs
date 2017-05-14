@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -13,9 +14,13 @@ namespace MVC5Course.Controllers
             return View();
         }
 
+        [ShareViewBag]
+        //[LocalOnly]
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            //ViewBag.Message = "Your application description page.";
+            //測試例外錯誤訊息
+            throw new ArgumentException("Error Handled!!");
 
             return View();
         }

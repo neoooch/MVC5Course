@@ -18,7 +18,7 @@ namespace MVC5Course.Controllers
         // GET: Products
         public ActionResult Index(bool Active = true)
         {
-            var data = repo.FindByAll(Active,ShowAll:false,ShowCnt: 10);
+            var data = repo.FindByAll(Active, ShowAll: false, ShowCnt: 10);
             return View(data);
         }
 
@@ -75,20 +75,33 @@ namespace MVC5Course.Controllers
             return View(product);
         }
 
-        // POST: Products/Edit/5
-        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
+        ////模型繫結預先驗證
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit([Bind(Include = "ProductId,ProductName,Price,Active,Stock")] Product product)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        repo.Update(product);
+        //        repo.UnitOfWork.Commit();
+        //        return RedirectToAction("Index");
+        //    }
+        //    return View(product);
+        //}
+
+        //模型繫結延遲驗證
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProductId,ProductName,Price,Active,Stock")] Product product)
+        public ActionResult Edit(int id, FormCollection form)
         {
-            if (ModelState.IsValid)
+            var UpdData = repo.FindByProductId(id);
+
+            if (TryUpdateModel(UpdData,new string[] { "ProductId", "ProductName", "Price", "Active", "Stock" }))
             {
-                repo.Update(product);
                 repo.UnitOfWork.Commit();
                 return RedirectToAction("Index");
             }
-            return View(product);
+            return View(UpdData);
         }
 
         // GET: Products/Delete/5
@@ -123,18 +136,56 @@ namespace MVC5Course.Controllers
             return RedirectToAction("Index");
         }
 
-        //依照Model的範圍數量給預設值
-        public ActionResult ProductList(string qStr,int MinStock=0,int MaxStock=999)
+        public ActionResult ProductList(SearchProductListVM ListData)
+        {
+            if (ListData == null)
+            {
+                ViewBag.Listdata = new SearchProductListVM()
+                {
+                    MinStock = 0,
+                    MaxStock = 999
+                };
+            }
+
+            FindProductListBySearch(ListData);
+            return View();
+
+        }
+
+        [HttpPost]
+        public ActionResult ProductList(SearchProductListVM ListData, ProductBatchUpdateVM[] items)
+        {
+            if (ModelState.IsValid)
+            {
+                foreach (var item in items)
+                {
+                    var prod = db.Product.Find(item.ProductId);
+                    prod.Price = item.Price;
+                    prod.Stock = item.Stock;
+                }
+
+                db.Configuration.ValidateOnSaveEnabled = false;
+                db.SaveChanges();
+
+                return RedirectToAction("ProductList",ListData);
+            }
+            FindProductListBySearch(ListData);
+
+            return View();
+        }
+
+        private void FindProductListBySearch(SearchProductListVM ListData)
         {
             //查詢所有資料
             var data = repo.FindByAll(true, ShowAll: false, ShowCnt: 10);
 
             //判斷是否有搜尋條件
-            if (!string.IsNullOrEmpty(qStr))
+            if (!String.IsNullOrEmpty(ListData.qStr))
             {
-                data = data.Where(p => p.ProductName.Contains(qStr));
+                data = data.Where(p => p.ProductName.Contains(ListData.qStr));
             }
-            data = data.Where(p => p.Stock >= MinStock && p.Stock <= MaxStock);
+            data = data.Where(p => p.Stock >= ListData.MinStock && p.Stock <= ListData.MaxStock);
+
 
             //選擇顯示欄位並用ProductId倒序
             ViewData.Model = data
@@ -145,7 +196,7 @@ namespace MVC5Course.Controllers
                     Price = p.Price,
                     Stock = p.Stock
                 }).OrderByDescending(p => p.ProductId);
-            return View();
+            ViewBag.ListData = ListData;
         }
 
         public ActionResult CreateProduct()

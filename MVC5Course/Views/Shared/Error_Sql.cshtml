@@ -1,0 +1,9 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@{
+    ViewBag.Title = "Error_Sql";
+    var ex = Model.Exception as System.Data.SqlClient.SqlException;
+}
+<h1 class="text-danger">SQL語法發生錯誤</h1>
+<h2 class="text-danger">@ex.Message</h2>
+<h3 class="text-danger">@ex.InnerException.InnerException.Message</h3>
+<pre>@ex.ToString()</pre>
