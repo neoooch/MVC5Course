@@ -76,5 +76,17 @@ namespace MVC5Course.Controllers
             db.Configuration.LazyLoadingEnabled = false;
             return Json(db.Product.Take(5),JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult viewTest()
+        {
+            ViewBag.IsEnabled = true;
+            return View();
+        }
+
+        public ActionResult RazorTest()
+        {
+            int[] data = new int[] { 1, 2, 3, 4, 5 };
+            return PartialView(data);
+        }
     }
 }

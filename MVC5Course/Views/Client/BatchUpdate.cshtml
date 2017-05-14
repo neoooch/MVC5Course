@@ -35,8 +35,8 @@
         @for (int i = 0; i < items.Length; i++)
         {
             <tr>
+                @Html.HiddenFor(modelItem => items[i].ClientId)
                 <td>
-                    @Html.HiddenFor(modelItem => items[i].ClientId)
                     @Html.EditorFor(modelItem => items[i].FirstName)
                 </td>
                 <td>
@@ -56,7 +56,6 @@
                 </td>
             </tr>
         }
-
     </table>
     <button>批次更新</button>
 }

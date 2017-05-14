@@ -1,0 +1,24 @@
+﻿
+@{ 
+    Layout = "";
+    ViewBag.TEXT = "<strong style='color:red ;'>12436</strong>";
+}
+
+@Html.Raw(ViewBag.TEXT)
+
+@ViewBag.Text
+
+@DateTime.Now
+
+@(1 + 2)
+
+@if (ViewBag.IsEnabled)
+{
+    <text>啟用</text>
+}
+else
+{
+    <text>停用</text>
+}
+
+TEXT@(ViewBag.IsEnabled)
