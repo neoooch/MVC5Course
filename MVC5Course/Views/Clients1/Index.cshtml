@@ -4,6 +4,10 @@
 
 @{
     ViewBag.Title = "Index";
+    if (IsAjax)
+    {
+        Layout = "";
+    }
 }
 
 <h2>Index</h2>
@@ -11,7 +15,7 @@
 {
     @:篩選:
     @Html.DropDownList("CreditRatingFilter", "選擇信用等級")
-    @Html.DropDownList("LastNameFilter","選擇姓氏")
+    @Html.DropDownList("LastNameFilter", "選擇姓氏")
     <button>篩選</button>
 }
 
@@ -70,4 +74,9 @@
 
 @Html.PagedListPager(
     Model as IPagedList,
-    (p) => Url.Action("Index",new { pageNo = p }))
+    (p) => Url.Action("Index", new
+    {
+        pageNo = p,
+        CreditRatingFilter = Html.Value("CreditRatingFilter"),
+        LastNameFilter = Html.Value("LastNameFilter")
+    }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing("#Main"))

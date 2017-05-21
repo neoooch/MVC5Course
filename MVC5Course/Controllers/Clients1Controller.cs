@@ -40,7 +40,8 @@ namespace MVC5Course.Controllers
             if (!String.IsNullOrEmpty(LastNameFilter))
             {
                 client = client.Where(c => c.LastName.Contains(LastNameFilter));
-            }ViewData.Model = client.OrderByDescending(c => c.ClientId).ToPagedList(pageNo, 10);
+            }
+            ViewData.Model = client.OrderByDescending(c => c.ClientId).ToPagedList(pageNo, 10);
             return View();
         }
 
