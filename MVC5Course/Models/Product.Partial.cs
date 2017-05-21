@@ -58,7 +58,12 @@ namespace MVC5Course.Models
         [Required(ErrorMessage = "請輸入商品庫存數量")]
         //[Range(0, 100, ErrorMessage = "請設定正確的商品庫存數量")]
         public Nullable<decimal> Stock { get; set; }
-    
+
+        //DataType會決定畫面上怎麼顯示(加上DataType.Date一定要有DisplayFormat，並且格式一定要yyyy-MM-dd)
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",ApplyFormatInEditMode = true)]
+        public DateTime CreateOn { get; set; }
+
         public virtual ICollection<OrderLine> OrderLine { get; set; }
     }
 }
